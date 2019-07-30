@@ -7,22 +7,21 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class ErrorDialog extends Dialog {
-    Label labelConnection, labelAccount, labelRegister;
+    Label label;
     Button close;
 
-    ErrorDialog(DialogConnection d) {
+    ErrorDialog(DialogConnection d, String msg) {
         super(d);
 
         setLayout(new BorderLayout());
         Panel panel = new Panel();
 
-        labelConnection = new Label("Ошибка подключения");
-        labelAccount = new Label("Неправильный логин/пароль");
-        labelRegister = new Label("Пользователь существует");
+        label = new Label(msg);
 
         close = new Button("Close");
-        //TODO Доделать вывод ошибок при неправильных данных
-        panel.add(labelConnection);
+
+        panel.add(label);
+
         panel.add(close);
 
         add("Center", panel);

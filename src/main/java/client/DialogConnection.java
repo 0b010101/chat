@@ -12,9 +12,11 @@ public class DialogConnection extends Dialog {
     Label labelIP, labelPort, labelNic, labelPass;
     Button enter, register;
     TextField fieldIP, fieldPort, fieldNic, fieldPass;
+    ClientController clientController;
 
-    public DialogConnection(Frame parent) {
+    public DialogConnection(Frame parent, ClientController clientController) {
         super(parent, false);
+        this.clientController = clientController;
         setBackground(Color.lightGray);
         setLayout(new BorderLayout());
         Panel panel = new Panel();
@@ -25,7 +27,7 @@ public class DialogConnection extends Dialog {
         labelPass = new Label("Password");
 
         fieldIP = new TextField(20);
-        fieldPort = new TextField(20);
+        fieldPort = new TextField("9000", 20);
         fieldNic = new TextField(20);
         fieldPass = new TextField(20);
 
@@ -50,7 +52,24 @@ public class DialogConnection extends Dialog {
         enter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ErrorDialog err = new ErrorDialog(DialogConnection.this);
+                String ip = fieldIP.getText();
+                String sPort = fieldPort.getText();
+                String nic = fieldNic.getText();
+                int port = 0;
+
+                try {
+                    port = Integer.parseInt(sPort);
+                    if (port == 0) throw new NumberFormatException();
+                } catch (NumberFormatException ex) {
+                    new ErrorDialog(DialogConnection.this, "Неправильно введен порт");
+                    return;
+                }
+                if (DialogConnection.this.clientController.connect(ip, port, nic)) {
+                    dispose();
+                } else {
+                    new ErrorDialog(DialogConnection.this, "Connection Error");
+                }
+
             }
         });
         register.addActionListener(new ActionListener() {
